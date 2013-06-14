@@ -128,8 +128,8 @@ PRODUCT_PACKAGES += \
     Development \
     LatinIME \
     SpareParts \
-    Superuser \
-    su
+    Superuser_koush_prebuilt \
+    su_koush_prebuilt
 
 # Optional CM packages
 PRODUCT_PACKAGES += \
