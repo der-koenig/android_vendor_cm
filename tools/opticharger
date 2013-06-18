@@ -11,7 +11,6 @@
 
 set -e
 QUIET=1
-BASE=`pwd`
 BRUTECRUSH="-brute"
 TMPDIR=/tmp/opticharge-$$
 
@@ -123,13 +122,13 @@ then
     mkdir -p $TMPDIR/$NAME
     trap "rm -rf $TMPDIR; exit" INT TERM EXIT
     cd $TMPDIR/$NAME
-    unzip -q $BASE/$1
+    unzip -q $1
     for x in `find . -name "*.png" | grep -v "\.9.png$" | tr "\n" " "`
     do
         [ $QUIET ] || echo -e $CL_YLW"Crushing $x"$CL_RST
         optimize_png $x
     done
-    cp $BASE/$1 $BASE/$1.old
+    cp $1 $1.old
 
     [ $QUIET ] || echo -e $CL_YLW"Repacking apk.."$CL_RST
     aapt p -0 .dat -0 .dict -0 .arsc -F $NAME .
@@ -139,12 +138,12 @@ then
     [ $QUIET ] || echo java -jar $ANDROID_HOST_OUT/framework/signapk.jar $ANDROID_BUILD_TOP/$CERT $ANDROID_BUILD_TOP/$KEY $NAME signed_$NAME
     java -jar $ANDROID_HOST_OUT/framework/signapk.jar $ANDROID_BUILD_TOP/$CERT $ANDROID_BUILD_TOP/$KEY $NAME signed_$NAME
     [ $QUIET ] || echo -e $CL_YLW"Zipaligning.."$CL_RST
-    zipalign -f 4 signed_$NAME $BASE/$1
+    zipalign -f 4 signed_$NAME $1
     if [ ! $QUIET ]; then
-        ls -l $BASE/$1.old
-        ls -l $BASE/$1
+        ls -l $1.old
+        ls -l $1
     fi
-    rm $BASE/$1.old
+    rm $1.old
 else
     echo "Usage: $0 [apk file]"
 fi
